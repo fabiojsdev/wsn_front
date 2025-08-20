@@ -1,9 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function AboutUs() {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("history");
+  
 
   const teamMembers = [
     {

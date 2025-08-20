@@ -1,10 +1,10 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
   faBroom, faPumpSoap, faUtensils, faBox, faShoppingCart,
   faTruck, faIndustry, faAward, faLock
 } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+
 
 export default function Home() {
   const navigate = useNavigate();
