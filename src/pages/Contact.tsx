@@ -5,7 +5,6 @@ import {
   FaAt,
   FaPhoneAlt,
   FaComment,
-  FaInfoCircle,
   FaWhatsapp,
   FaClock,
   FaMapMarkerAlt,
@@ -15,10 +14,12 @@ import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
-  FaTiktok,
   FaPaperPlane,
   FaCheckCircle,
   FaChevronDown,
+  FaHeadset,
+  FaBuilding,
+  FaQuestionCircle
 } from "react-icons/fa";
 
 export default function Contact() {
@@ -28,6 +29,7 @@ export default function Contact() {
     phone: "",
     subject: "",
     message: "",
+    company: ""
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -51,100 +53,161 @@ export default function Contact() {
         phone: "",
         subject: "",
         message: "",
+        company: ""
       });
-    }, 3000);
+    }, 5000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-blue-50 py-12">
       <div className="max-w-7xl mx-auto px-4">
         {/* Cabeçalho */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-bold text-red-700 mb-4">Entre em Contato</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-blue-700 mb-4">Entre em Contato</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
             Estamos à disposição para tirar suas dúvidas, ouvir sugestões e oferecer o melhor atendimento.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Formulário */}
-          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow duration-300 animate-slide-right">
-            <h2 className="text-2xl font-semibold text-red-700 mb-6 flex items-center gap-2">
-              <FaEnvelope /> Envie sua Mensagem
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+            <h2 className="text-2xl font-semibold text-blue-700 mb-6 flex items-center gap-3">
+              <FaEnvelope className="text-blue-600" /> Envie sua Mensagem
             </h2>
 
             {isSubmitted && (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 flex items-center gap-2 animate-pulse">
-                <FaCheckCircle /> Mensagem enviada com sucesso! Retornaremos em breve.
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
+                <FaCheckCircle className="text-green-500" /> 
+                Mensagem enviada com sucesso! Retornaremos em breve.
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Seu nome completo"
-                  icon={FaUser}
-                  value={formData.name}
-                  onChange={handleChange}
-                  label="Nome Completo *"
-                />
-                <InputField
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  icon={FaAt}
-                  value={formData.email}
-                  onChange={handleChange}
-                  label="E-mail *"
-                />
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Nome Completo *
+                  </label>
+                  <div className="relative">
+                    <FaUser className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Seu nome completo"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    E-mail *
+                  </label>
+                  <div className="relative">
+                    <FaAt className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="(11) 99999-9999"
-                  icon={FaPhoneAlt}
-                  value={formData.phone}
-                  onChange={handleChange}
-                  label="Telefone/WhatsApp *"
-                />
-                <SelectField
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  options={[
-                    { value: "", label: "Selecione um assunto" },
-                    { value: "orcamento", label: "Solicitar Orçamento" },
-                    { value: "duvida", label: "Dúvida sobre Produtos" },
-                    { value: "reclamacao", label: "Reclamação" },
-                    { value: "sugestao", label: "Sugestão" },
-                    { value: "outro", label: "Outro" },
-                  ]}
-                  label="Assunto *"
-                  icon={FaChevronDown}
-                />
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Telefone/WhatsApp *
+                  </label>
+                  <div className="relative">
+                    <FaPhoneAlt className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="(11) 99999-9999"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                    Empresa
+                  </label>
+                  <div className="relative">
+                    <FaBuilding className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      placeholder="Sua empresa"
+                      value={formData.company}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <TextAreaField
-                id="message"
-                name="message"
-                placeholder="Descreva sua mensagem aqui..."
-                icon={FaComment}
-                value={formData.message}
-                onChange={handleChange}
-                label="Mensagem *"
-              />
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                  Assunto *
+                </label>
+                <div className="relative">
+                  <select
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-colors"
+                  >
+                    <option value="">Selecione um assunto</option>
+                    <option value="orcamento">Solicitar Orçamento</option>
+                    <option value="duvida">Dúvida sobre Produtos</option>
+                    <option value="reclamacao">Reclamação</option>
+                    <option value="sugestao">Sugestão</option>
+                    <option value="parceria">Proposta de Parceria</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-3 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Mensagem *
+                </label>
+                <div className="relative">
+                  <FaComment className="absolute left-3 top-3 text-gray-400" />
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={5}
+                    placeholder="Descreva sua mensagem aqui..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                  />
+                </div>
+              </div>
 
               <button
                 type="submit"
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
               >
                 <FaPaperPlane /> Enviar Mensagem
               </button>
@@ -152,220 +215,174 @@ export default function Contact() {
           </div>
 
           {/* Informações de Contato */}
-          <ContactInfo />
+          <div className="space-y-8">
+            {/* Informações principais */}
+            <div className="bg-blue-700 text-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+              <h2 className="text-2xl font-semibold mb-6 flex items-center gap-3">
+                <FaHeadset className="text-blue-300" /> Informações de Contato
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-start p-3 rounded-lg transition-colors">
+                  <div className="rounded-full w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0 bg-blue-600">
+                    <FaPhoneAlt className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">Telefone</h3>
+                    <p className="mt-1 text-blue-100">(11) 3789-3789</p>
+                  </div>
+                </div>
+                <a
+                  href="https://wa.me/5511973846070"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start p-3 rounded-lg transition-colors hover:bg-blue-600/20"
+                >
+                  <div className="rounded-full w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0 bg-green-500">
+                    <FaWhatsapp className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">WhatsApp</h3>
+                    <p className="mt-1 text-blue-100">(11) 97384-6070</p>
+                  </div>
+                </a>
+                <a
+                  href="mailto:contato@wsndistribuidora.com.br"
+                  className="flex items-start p-3 rounded-lg transition-colors hover:bg-blue-600/20"
+                >
+                  <div className="rounded-full w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0 bg-blue-600">
+                    <FaEnvelope className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">E-mail</h3>
+                    <p className="mt-1 text-blue-100">contato@wsndistribuidora.com.br</p>
+                  </div>
+                </a>
+                <div className="flex items-start p-3 rounded-lg transition-colors">
+                  <div className="rounded-full w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0 bg-blue-600">
+                    <FaClock className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">Horário de Atendimento</h3>
+                    <p className="mt-1 text-blue-100">Segunda a Sexta: 8h às 18h | Sábado: 8h às 12h</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Localização */}
+            <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+              <h2 className="text-2xl font-semibold text-blue-700 mb-6 flex items-center gap-3">
+                <FaMapMarkerAlt className="text-blue-600" /> Nossa Localização
+              </h2>
+              <div className="flex items-start p-3 rounded-lg transition-colors">
+                <div className="rounded-full w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0 bg-blue-600">
+                  <FaMapMarkedAlt className="text-white text-sm" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800">Endereço</h3>
+                  <p className="mt-1 text-gray-600">Av. Baruel, 506 - Vila Baruel, São Paulo - SP, CEP: 02522-000</p>
+                </div>
+              </div>
+              <div className="bg-blue-50 h-48 rounded-lg flex items-center justify-center mt-4 border border-blue-200">
+                <div className="text-center text-blue-700">
+                  <FaMapMarkerAlt className="text-3xl mb-2 mx-auto" />
+                  <p className="text-sm mb-3">Mapa de localização</p>
+                  <a
+                    href="https://goo.gl/maps/example"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <FaDirections /> Como chegar
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Redes Sociais */}
+            <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+              <h2 className="text-2xl font-semibold text-blue-700 mb-6 flex items-center gap-3">
+                <FaShareAlt className="text-blue-600" /> Siga-nos
+              </h2>
+              <p className="text-gray-600 mb-6">Acompanhe nossas novidades e promoções</p>
+              <div className="flex space-x-3">
+                <a
+                  href="#"
+                  className="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-lg flex items-center justify-center transition-colors transform hover:-translate-y-1 shadow-md"
+                  aria-label="Facebook"
+                >
+                  <FaFacebookF />
+                </a>
+                <a
+                  href="#"
+                  className="bg-pink-500 hover:bg-pink-600 text-white w-12 h-12 rounded-lg flex items-center justify-center transition-colors transform hover:-translate-y-1 shadow-md"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram />
+                </a>
+                <a
+                  href="#"
+                  className="bg-blue-500 hover:bg-blue-600 text-white w-12 h-12 rounded-lg flex items-center justify-center transition-colors transform hover:-translate-y-1 shadow-md"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedinIn />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* FAQ */}
-        <FAQSection />
-      </div>
-    </div>
-  );
-}
-
-// ----------------- Componentes Auxiliares -----------------
-
-function InputField({ id, name, type, placeholder, icon: Icon, value, onChange, label }: any) {
-  return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
-        {label}
-      </label>
-      <div className="relative">
-        <Icon className="absolute left-3 top-3 text-gray-400" />
-        <input
-          id={id}
-          name={name}
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          required
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-        />
-      </div>
-    </div>
-  );
-}
-
-function SelectField({ id, name, value, onChange, options, label, icon: Icon }: any) {
-  return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
-        {label}
-      </label>
-      <div className="relative">
-        <select
-          id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          required
-          className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
-        >
-          {options.map((opt: any) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <Icon className="absolute right-3 top-3 text-gray-400 pointer-events-none" />
-      </div>
-    </div>
-  );
-}
-
-function TextAreaField({ id, name, placeholder, icon: Icon, value, onChange, label }: any) {
-  return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
-        {label}
-      </label>
-      <div className="relative">
-        <Icon className="absolute left-3 top-3 text-gray-400" />
-        <textarea
-          id={id}
-          name={name}
-          rows={5}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          required
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-        />
-      </div>
-    </div>
-  );
-}
-
-function ContactInfo() {
-  return (
-    <div className="space-y-8 animate-slide-left">
-      {/* Informações principais */}
-      <div className="bg-red-700 text-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-          <FaInfoCircle /> Informações de Contato
-        </h2>
-        <ContactItem icon={FaPhoneAlt} title="Telefone" value="(11) 3789-3789" />
-        <ContactItem
-          icon={FaWhatsapp}
-          title="WhatsApp"
-          value="(11) 5196-3789"
-          link="https://wa.me/551151963789"
-        />
-        <ContactItem icon={FaEnvelope} title="E-mail" value="contato@wsn.com.br" />
-        <ContactItem icon={FaClock} title="Horário" value="Seg-Sex: 8h às 18h | Sáb: 8h às 12h" />
-      </div>
-
-      {/* Localização */}
-      <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-        <h2 className="text-2xl font-semibold text-red-700 mb-4 flex items-center gap-2">
-          <FaMapMarkerAlt /> Nossa Localização
-        </h2>
-        <div className="bg-gray-200 h-48 rounded-lg flex items-center justify-center">
-          <div className="text-center text-gray-500">
-            <FaMapMarkedAlt className="text-3xl mb-2" />
-            <p>Mapa de localização</p>
-            <a
-              href="https://maps.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm flex items-center justify-center gap-1"
-            >
-              <FaDirections /> Como chegar
-            </a>
+        <div className="mt-16">
+          <h2 className="text-3xl font-semibold text-blue-700 mb-2 text-center">
+            Perguntas Frequentes
+          </h2>
+          <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
+            Confira as dúvidas mais comuns sobre nossos produtos e serviços
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                question: "Qual o prazo de entrega?",
+                answer: "Para São Paulo capital: 24-48h. Demais regiões: consulte-nos para verificar prazos."
+              },
+              {
+                question: "Entregam para todo o Brasil?",
+                answer: "Sim, trabalhamos com parceiros logísticos para atender todo o território nacional."
+              },
+              {
+                question: "Há valor mínimo para pedido?",
+                answer: "Sim, R$ 150,00 para São Paulo capital. Para outras localidades, consulte condições."
+              },
+              {
+                question: "Como solicitar orçamento?",
+                answer: "Através do formulário, telefone ou WhatsApp. Retornamos em até 2 horas úteis."
+              },
+              {
+                question: "Trabalham com quais formas de pagamento?",
+                answer: "Cartão de crédito, débito, PIX, transferência bancária e boleto."
+              },
+              {
+                question: "Oferecem descontos para grandes quantidades?",
+                answer: "Sim, temos condições especiais para pedidos em grande volume. Consulte-nos."
+              }
+            ].map((faq, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border-l-4 border-blue-500"
+              >
+                <div className="flex items-start gap-3">
+                  <FaQuestionCircle className="text-blue-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-700 mb-2">{faq.question}</h3>
+                    <p className="text-gray-600">{faq.answer}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-
-      {/* Redes Sociais */}
-      <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-        <h2 className="text-2xl font-semibold text-red-700 mb-4 flex items-center gap-2">
-          <FaShareAlt /> Siga-nos
-        </h2>
-        <p className="text-gray-600 mb-4">Acompanhe nossas novidades</p>
-        <div className="flex space-x-4">
-          <SocialLink icon={FaFacebookF} bg="bg-blue-600" />
-          <SocialLink icon={FaInstagram} bg="bg-pink-600" />
-          <SocialLink icon={FaLinkedinIn} bg="bg-blue-400" />
-          <SocialLink icon={FaTiktok} bg="bg-gray-800" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ContactItem({ icon: Icon, title, value, link }: any) {
-  return (
-    <div className="flex items-center mb-4">
-      <div className="bg-red-600 rounded-full w-10 h-10 flex items-center justify-center mr-4">
-        <Icon />
-      </div>
-      <div>
-        <h3 className="font-semibold">{title}</h3>
-        {link ? (
-          <a
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-block text-sm text-white hover:underline"
-          >
-            {value}
-          </a>
-        ) : (
-          <p className="mt-1">{value}</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function SocialLink({ icon: Icon, bg }: any) {
-  return (
-    <a
-      href="#"
-      className={`${bg} hover:${bg.replace("bg-", "bg-")}700 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors`}
-    >
-      <Icon />
-    </a>
-  );
-}
-
-function FAQSection() {
-  const faqs = [
-    {
-      question: "Qual o prazo de entrega?",
-      answer:
-        "O prazo varia por região. Para São Paulo capital, 24-48h. Consulte outras localidades.",
-    },
-    {
-      question: "Entregas para todo o Brasil?",
-      answer: "Sim, via parceiros logísticos confiáveis.",
-    },
-    {
-      question: "Valor mínimo para pedido?",
-      answer: "R$ 150,00 para SP capital. Consulte condições especiais.",
-    },
-    {
-      question: "Como solicitar orçamento?",
-      answer: "Via formulário, telefone ou WhatsApp. Resposta em até 2h úteis.",
-    },
-  ];
-
-  return (
-    <div className="mt-16">
-      <h2 className="text-3xl font-semibold text-red-700 mb-8 text-center animate-fade-in">
-        Perguntas Frequentes
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {faqs.map((faq, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
-          >
-            <h3 className="text-lg font-semibold text-red-700 mb-2">{faq.question}</h3>
-            <p className="text-gray-600">{faq.answer}</p>
-          </div>
-        ))}
       </div>
     </div>
   );

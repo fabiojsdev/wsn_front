@@ -31,7 +31,7 @@ export default function ScrollToTop() {
     }`}>
       <button
         onClick={scrollToTop}
-        className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-full flex items-center justify-center shadow-md hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 group"
+        className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white rounded-full flex items-center justify-center shadow-md hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 group"
         aria-label="Voltar ao topo"
       >
         <svg

@@ -48,7 +48,7 @@ const Products: React.FC = () => {
         setError("Falha ao carregar o catálogo de produtos.");
         setIsLoading(false);
       });
-  }, []);
+  });
 
   // Função para filtrar e ordenar produtos
   const filteredAndSortedProducts = products
@@ -83,10 +83,10 @@ const Products: React.FC = () => {
   };
 
   if (isLoading) return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-blue-50 py-12">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600 mb-4"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-gray-600">Carregando catálogo de produtos...</p>
         </div>
       </div>
@@ -94,9 +94,9 @@ const Products: React.FC = () => {
   );
 
   if (error) return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-blue-50 py-12">
       <div className="container mx-auto px-4">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center max-w-2xl mx-auto">
+        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded text-center max-w-2xl mx-auto">
           <i className="fas fa-exclamation-triangle mr-2"></i>
           {error}
         </div>
@@ -105,11 +105,11 @@ const Products: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-blue-50 py-8">
       <div className="container mx-auto px-4">
         {/* Cabeçalho e controles */}
         <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-red-700 mb-2 text-center">Catálogo de Produtos</h1>
+          <h1 className="text-3xl font-semibold text-blue-700 mb-2 text-center">Catálogo de Produtos</h1>
           <p className="text-gray-600 text-center mb-6 max-w-2xl mx-auto">
             Descubra nossa linha completa de produtos de limpeza, higiene e descartáveis
           </p>
@@ -125,7 +125,7 @@ const Products: React.FC = () => {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <i className="fas fa-search absolute right-3 top-3.5 text-gray-400"></i>
             </div>
@@ -134,7 +134,7 @@ const Products: React.FC = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="name">Ordenar por nome</option>
                 <option value="priceLow">Preço: menor para maior</option>
@@ -156,7 +156,7 @@ const Products: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
               {currentProducts.map((product) => (
                 <div key={product.ref} className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border border-gray-100">
-                  <div className="h-48 bg-gray-100 flex items-center justify-center p-4 relative">
+                  <div className="h-48 bg-blue-50 flex items-center justify-center p-4 relative">
                     <img 
                       src={product.imagem} 
                       alt={product.nome}
@@ -166,7 +166,7 @@ const Products: React.FC = () => {
                         target.src = "/images/default.jpg";
                       }}
                     />
-                    <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+                    <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                       Ref: {product.ref}
                     </span>
                   </div>
@@ -178,9 +178,12 @@ const Products: React.FC = () => {
                     
                     <div className="flex justify-between items-center mt-4">
                       <div>
-                        <p className="text-lg font-bold text-red-700">{formatPrice(product.preco)}</p>
+                        <p className="text-lg font-bold text-blue-700">{formatPrice(product.preco)}</p>
                         <p className="text-xs text-gray-500">por {product.unidade}</p>
                       </div>
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors">
+                        <i className="fas fa-shopping-cart text-sm"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -194,7 +197,7 @@ const Products: React.FC = () => {
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-2 rounded border border-gray-300 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
+                    className="px-3 py-2 rounded border border-gray-300 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-50 transition-colors"
                   >
                     <i className="fas fa-chevron-left text-xs"></i>
                   </button>
@@ -217,8 +220,8 @@ const Products: React.FC = () => {
                         onClick={() => setCurrentPage(pageNum)}
                         className={`px-3 py-2 rounded border ${
                           currentPage === pageNum 
-                            ? 'bg-red-600 text-white border-red-600' 
-                            : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+                            ? 'bg-blue-600 text-white border-blue-600' 
+                            : 'border-gray-300 text-gray-600 hover:bg-blue-50'
                         } transition-colors`}
                       >
                         {pageNum}
@@ -229,7 +232,7 @@ const Products: React.FC = () => {
                   <button
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-2 rounded border border-gray-300 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
+                    className="px-3 py-2 rounded border border-gray-300 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-50 transition-colors"
                   >
                     <i className="fas fa-chevron-right text-xs"></i>
                   </button>
@@ -247,7 +250,7 @@ const Products: React.FC = () => {
                 setSearchTerm("");
                 setCurrentPage(1);
               }}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
             >
               Limpar busca
             </button>
@@ -255,17 +258,17 @@ const Products: React.FC = () => {
         )}
 
         {/* CTA Section */}
-        <div className="bg-red-700 text-white rounded-lg p-8 mt-12 text-center">
+        <div className="bg-blue-700 text-white rounded-lg p-8 mt-12 text-center">
           <h2 className="text-2xl font-semibold mb-4">Precisa de ajuda para escolher os produtos?</h2>
           <p className="mb-6 max-w-2xl mx-auto">
             Nossos especialistas estão prontos para te ajudar a encontrar as melhores soluções para suas necessidades
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-red-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition-colors">
+            <button className="bg-white text-blue-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition-colors">
               <i className="fas fa-comments mr-2"></i>
               Falar com Consultor
             </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-red-700 font-medium px-6 py-3 rounded-lg transition-colors">
+            <button className="border-2 border-white text-white hover:bg-white hover:text-blue-700 font-medium px-6 py-3 rounded-lg transition-colors">
               <i className="fas fa-file-alt mr-2"></i>
               Solicitar Catálogo Completo
             </button>
