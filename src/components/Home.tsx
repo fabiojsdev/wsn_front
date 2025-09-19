@@ -1,136 +1,231 @@
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faBroom, faPumpSoap, faUtensils, faBox, 
+import {
+  faBroom, faPumpSoap, faUtensils, faBox,
   faTruck, faIndustry, faAward, faLock, faArrowRight,
-  faShieldAlt, faHeadset, faMapMarkerAlt
-} from "@fortawesome/free-solid-svg-icons";
+  faShieldAlt, faHeadset, faMapMarkerAlt,
+  faCheckCircle
+} from "@fortawesome/free-solid-svg-icons"; 
+import bombril from '../../public/images/bombril.png';
+import limpol from '../../public/images/limpol.png';
+import protex from '../../public/images/protex.png';
+import ype from '../../public/images/ype.png';
+import tresm from '../../public/images/3m.png';
+import scotch from '../../public/images/scotch.png';
+
+// Componente Carousel customizado
+function SwiperCarousel() {
+  const slides = [
+    { image: "./images/banner1.png", alt: "Soluções Completas para seu Negócio" },
+    { image: "./images/banner2.png", alt: "Atendimento Personalizado" },
+    { image: "./images/banner3.png", alt: "Entregas para Todo Brasil" }
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [slides.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+  };
+
+  return (
+    <div className="w-full relative overflow-hidden">
+      {/* Container com todos os slides */}
+      <div
+        className="flex transition-transform duration-700 ease-in-out"
+        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+      >
+        {slides.map((slide, i) => (
+          <div
+            key={i}
+            className="min-w-full aspect-[21/9]  flex items-center justify-center"
+          >
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              className="w-full h-full object-contain"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Indicadores de slide */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentSlide ? "bg-white scale-125" : "bg-white/50 hover:bg-white/75"
+            }`}
+          />
+        ))}
+      </div>
+
+      <style>{`
+        .aspect-[21/9] {
+          aspect-ratio: 21 / 9;
+        }
+        @media (max-width: 640px) {
+          .aspect-[21/9] {
+            aspect-ratio: 16 / 9;
+            min-height: 40vh;
+          }
+        }
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .aspect-[21/9] {
+            min-height: 50vh;
+          }
+        }
+        @media (min-width: 1025px) {
+          .aspect-[21/9] {
+            min-height: 60vh;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 export default function Home() {
   const navigate = useNavigate();
 
   const categories = [
-    { name: "Limpeza", icon: faBroom, description: "Produtos de limpeza profissional" },
-    { name: "Higiene", icon: faPumpSoap, description: "Itens de higiene pessoal" },
-    { name: "Descartáveis", icon: faUtensils, description: "Descartáveis para alimentação" },
-    { name: "Embalagens", icon: faBox, description: "Embalagens diversas" },
-    { name: "EPIs", icon: faShieldAlt, description: "Equipamentos de proteção" },
+    { name: "Limpeza", icon: faBroom, description: "Produtos de limpeza profissional", color: "bg-blue-100" },
+    { name: "Higiene", icon: faPumpSoap, description: "Itens de higiene pessoal", color: "bg-green-100" },
+    { name: "Descartáveis", icon: faUtensils, description: "Descartáveis para alimentação", color: "bg-amber-100" },
+    { name: "Embalagens", icon: faBox, description: "Embalagens diversas", color: "bg-rose-100" },
+    { name: "EPIs", icon: faShieldAlt, description: "Equipamentos de proteção", color: "bg-purple-100" },
   ];
 
   const features = [
-    { icon: faTruck, title: "Entregas Rápidas", desc: "Para São Paulo e todo Brasil" },
-    { icon: faIndustry, title: "Qualidade Garantida", desc: "Produtos de alta qualidade" },
-    { icon: faAward, title: "Experiência", desc: `${new Date().getFullYear() - 2006}+ anos no mercado` },
-    { icon: faHeadset, title: "Atendimento", desc: "Suporte especializado" },
+    { icon: faTruck, title: "Entregas Rápidas", desc: "Entregas para São Paulo e todo Brasil" },
+    { icon: faIndustry, title: "Qualidade Garantida", desc: "Produtos testados e aprovados" },
+    { icon: faAward, title: "Experiência", desc: `19 anos de mercado` },
+    { icon: faHeadset, title: "Atendimento", desc: "Suporte especializado personalizado" },
   ];
 
   const stats = [
-    { value: `${new Date().getFullYear() - 2006}+`, label: "Anos de experiência" },
+    { value: "19", label: "Anos de experiência" },
     { value: "1000+", label: "Produtos" },
     { value: "5000+", label: "Clientes satisfeitos" },
     { value: "100%", label: "Comprometimento" },
   ];
 
-  // Função para navegar para a página de produtos com a categoria
+  const brands = [
+    { name: "Protex", src: protex },
+    { name: "Limpol", src: limpol },
+    { name: "BomBril", src: bombril },
+    { name: "Ypê", src: ype },
+    { name: "3M", src: tresm },
+    { name: "Scotch", src: scotch },
+  ];
+
   const handleCategoryClick = (categoryName: string) => {
     navigate(`/products?category=${categoryName.toLowerCase()}`);
   };
-
   return (
-    <div className="min-h-screen bg-blue-50 text-gray-800">
-      {/* Main Banner */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white py-20 text-center overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-black"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-pattern opacity-5"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">WSN Distribuidora</h1>
-          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            Soluções completas em descartáveis, EPIs e produtos de limpeza para o seu negócio
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => navigate("/products")}
-              className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg text-lg font-medium transition-all duration-300 hover:-translate-y-1 shadow-lg flex items-center justify-center"
-            >
-              <span>Conheça Nossos Produtos</span>
-              <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
-            </button>
-            <button
-              onClick={() => navigate("/contact")}
-              className="border-2 border-white text-white hover:bg-white hover:text-blue-700 px-8 py-3 rounded-lg text-lg font-medium transition-colors duration-300 flex items-center justify-center"
-            >
-              <FontAwesomeIcon icon={faHeadset} className="mr-2" />
-              Solicitar Orçamento
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Destaques */}
-      <section className="bg-white py-12">
+    <div className="min-h-screen bg-white text-gray-800">
+      <SwiperCarousel />
+      
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Por que escolher a WSN?</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Mais de 19 anos fornecendo soluções de qualidade para empresas de todos os tamanhos</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="flex flex-col items-center text-center p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-300">
-                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                  <FontAwesomeIcon icon={feature.icon} className="text-blue-600 text-2xl" />
+              <div key={index} className="flex flex-col items-center text-center p-6 rounded-xl bg-gradient-to-br from-white to-gray-50 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group">
+                <div className="bg-blue-500 w-20 h-20 rounded-full flex items-center justify-center mb-6 text-white group-hover:scale-110 transition-transform duration-300">
+                  <FontAwesomeIcon icon={feature.icon} className="text-2xl" />
                 </div>
-                <h3 className="text-lg font-semibold text-blue-700 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.desc}</p>
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">{feature.title}</h3>
+                <p className="text-gray-600">{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-semibold text-blue-700 mb-2">Nossas Categorias</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Trabalhamos com uma ampla variedade de produtos para atender às necessidades do seu negócio
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg shadow-md p-6 text-center group hover:border-blue-500 border-2 border-transparent transition-all duration-300 hover:-translate-y-2 cursor-pointer"
-              onClick={() => handleCategoryClick(category.name)}
-            >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
-                <FontAwesomeIcon icon={category.icon} className="text-blue-600 text-xl" />
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Nossas Categorias</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Oferecemos uma ampla variedade de produtos para atender todas as necessidades do seu negócio
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {categories.map((category, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-sm p-6 text-center group hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100"
+                onClick={() => handleCategoryClick(category.name)}
+              >
+                <div className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <FontAwesomeIcon icon={category.icon} className="text-gray-700 text-xl" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{category.name}</h3>
+                <p className="text-gray-500 text-sm mb-4">{category.description}</p>
+                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center justify-center mx-auto group-hover:translate-x-1 transition-transform duration-300">
+                  <span>Ver Produtos</span>
+                  <FontAwesomeIcon icon={faArrowRight} className="ml-1 text-xs" />
+                </button>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">{category.name}</h3>
-              <p className="text-gray-500 text-sm mb-4">{category.description}</p>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center justify-center mx-auto">
-                <span>Ver Produtos</span>
-                <FontAwesomeIcon icon={faArrowRight} className="ml-1 text-xs" />
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Sobre a empresa */}
-      <section className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-16">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4">Sobre a WSN</h2>
-                <p className="mb-4 opacity-90">
-                  Desde 2006, a WSN Distribuidora é especializada em soluções completas para descartáveis, 
+              <div className="bg-gradient-to-br from-blue-50 to-gray-50 p-8 rounded-2xl shadow-sm">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6">Sobre a WSN</h2>
+                <p className="mb-4 text-gray-600 leading-relaxed">
+                  Desde 2006, a WSN Distribuidora é especializada em soluções completas para descartáveis,
                   EPIs e produtos de limpeza, atendendo empresas, condomínios, restaurantes e comércios.
                 </p>
-                <p className="mb-6 opacity-90">
-                  Nossa missão é fornecer produtos de qualidade com preços competitivos e um atendimento 
+                <p className="mb-6 text-gray-600 leading-relaxed">
+                  Nossa missão é fornecer produtos de qualidade com preços competitivos e um atendimento
                   personalizado que vai além da simples venda.
                 </p>
+                <div className="flex flex-wrap gap-4 mb-6">
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 mr-2" />
+                    <span className="text-gray-700">Qualidade garantida</span>
+                  </div>
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 mr-2" />
+                    <span className="text-gray-700">Entrega rápida</span>
+                  </div>
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 mr-2" />
+                    <span className="text-gray-700">Preços competitivos</span>
+                  </div>
+                </div>
                 <button
                   onClick={() => navigate("/aboutus")}
-                  className="bg-white text-blue-600 hover:bg-blue-50 font-medium px-6 py-3 rounded-lg transition-colors duration-300 flex items-center"
+                  className="bg-blue-600 text-white hover:bg-blue-700 font-medium px-6 py-3 rounded-lg transition-colors duration-300 flex items-center"
                 >
                   <span>Conheça Nossa História</span>
                   <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
@@ -139,11 +234,11 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2 grid grid-cols-2 gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm p-6 rounded-xl text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                <div key={index} className="bg-white p-6 rounded-xl shadow-sm text-center border border-gray-100">
+                  <div className="text-4xl font-bold text-blue-600 mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-white/80">{stat.label}</div>
+                  <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -151,43 +246,45 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Marcas/Parceiros */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-2">Trabalhamos com as Melhores Marcas</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Parcerias com fornecedores renomados para garantir qualidade e confiabilidade
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 place-items-center">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-20 w-20 md:h-24 md:w-24 bg-white rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-300 p-3"
-            >
-              <div className="text-center">
-                <div className="text-blue-600 font-bold text-sm">Marca</div>
-                <div className="text-gray-500 text-xs">{i + 1}</div>
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Trabalhamos com as Melhores Marcas</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Parcerias com fornecedores renomados para garantir qualidade e confiabilidade
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 place-items-center">
+            {brands.map((brand, i) => (
+              <div
+                key={i}
+                className="h-28 w-28 bg-white rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-shadow duration-300 p-4 border border-gray-100 hover:border-blue-200"
+              >
+                <div className="text-center">
+                  <img src={brand.src} alt={brand.name} className="h-12 mx-auto mb-2 object-contain" />
+                  <div className="text-xs text-gray-500 mt-2">{brand.name}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Área de atendimento */}
-      <section className="bg-blue-700 text-white py-12">
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center">
-              <FontAwesomeIcon icon={faMapMarkerAlt} className="text-2xl mr-4" />
+              <div className="bg-white/20 p-4 rounded-full mr-6">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="text-2xl" />
+              </div>
               <div>
-                <h2 className="text-xl font-semibold mb-1">Atendemos Todo o Brasil</h2>
+                <h2 className="text-2xl font-bold mb-2">Atendemos Todo o Brasil</h2>
                 <p className="opacity-90">Entregas rápidas e eficientes para todo o território nacional</p>
               </div>
             </div>
-            <button 
+            <button
               onClick={() => navigate("/contact")}
-              className="bg-white text-blue-700 hover:bg-blue-50 font-medium px-6 py-3 rounded-lg transition-colors duration-300"
+              className="bg-white text-blue-600 hover:bg-blue-50 font-semibold px-8 py-4 rounded-lg transition-colors duration-300 whitespace-nowrap"
             >
               Solicitar Cotação
             </button>
@@ -195,34 +292,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Payment and Seals */}
-      <section className="bg-white py-8 border-t border-blue-100">
+      <section className="py-8 bg-white border-t border-gray-100">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex flex-col md:flex-row items-center gap-4">
               <span className="text-gray-700 font-medium">Formas de pagamento:</span>
               <div className="flex gap-2">
-                <div className="h-8 w-12 bg-blue-50 rounded flex items-center justify-center text-xs text-blue-700 font-medium shadow-sm">Pix</div>
-                <div className="h-8 w-12 bg-blue-50 rounded flex items-center justify-center text-xs text-blue-700 font-medium shadow-sm">Cartão</div>
-                <div className="h-8 w-12 bg-blue-50 rounded flex items-center justify-center text-xs text-blue-700 font-medium shadow-sm">Boleto</div>
+                <div className="h-10 w-14 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700 font-medium shadow-sm border border-gray-200">
+                  Pix
+                </div>
+                <div className="h-10 w-14 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700 font-medium shadow-sm border border-gray-200">
+                  Cartão
+                </div>
+                <div className="h-10 w-14 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700 font-medium shadow-sm border border-gray-200">
+                  Boleto
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-gray-700 font-medium">Certificações:</span>
-              <div className="h-8 px-3 bg-green-100 rounded flex items-center justify-center text-green-700 text-xs font-medium shadow-sm">
-                <FontAwesomeIcon icon={faLock} className="mr-1" /> Site Seguro
+              <div className="h-10 px-4 bg-green-100 rounded-lg flex items-center justify-center text-green-700 text-sm font-medium shadow-sm border border-green-200">
+                <FontAwesomeIcon icon={faLock} className="mr-2" /> Site Seguro
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <style>{`
-        .bg-pattern {
-          background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-          background-size: 20px 20px;
-        }
-      `}</style>
     </div>
   );
 }

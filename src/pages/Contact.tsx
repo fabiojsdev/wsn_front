@@ -59,7 +59,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 py-12">
+    <div className="min-h-screen bg-white py-12">
       <div className="max-w-7xl mx-auto px-4">
         {/* Cabeçalho */}
         <div className="text-center mb-12">
