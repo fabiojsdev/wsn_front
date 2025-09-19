@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import {
@@ -14,7 +15,6 @@ import { useSearchParams } from "react-router-dom";
 interface Product {
   ref: string;
   nome: string;
-  preco: number;
   unidade: string;
   imagem?: string;
   categoria: string;
@@ -125,8 +125,6 @@ const Products: React.FC = () => {
       switch (sortBy) {
         case "name":
           return a.nome.localeCompare(b.nome);
-        case "price":
-          return a.preco - b.preco;
         default:
           return 0;
       }
@@ -218,7 +216,6 @@ const Products: React.FC = () => {
                   className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="name">Ordenar por nome</option>
-                  <option value="price">Ordenar por preço</option>
                 </select>
               </div>
             </div>
@@ -264,16 +261,13 @@ const Products: React.FC = () => {
                     </h3>
 
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-lg font-bold text-blue-700">
-                        R$ {product.preco.toFixed(2)}
-                      </span>
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                         {product.unidade}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center mt-4">
-                      <span className="text-xsbg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
                         {categories.find(c => c.id === product.categoria)?.name}
                       </span>
                       <button
@@ -384,4 +378,4 @@ const Products: React.FC = () => {
   );
 };
 
-export default Products;;
+export default Products;
