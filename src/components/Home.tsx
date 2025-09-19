@@ -2,10 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBroom, faPumpSoap, faUtensils, faBox,
-  faTruck, faIndustry, faAward, faLock, faArrowRight,
-  faShieldAlt, faHeadset, faMapMarkerAlt,
-  faCheckCircle
+  faBroom, faUtensils, faBox,
+  faTruck, faIndustry, faAward, faHeadset, faMapMarkerAlt,
+  faCheckCircle, faArrowRight, faShieldAlt, faLock
 } from "@fortawesome/free-solid-svg-icons"; 
 import bombril from '../../public/images/bombril.png';
 import limpol from '../../public/images/limpol.png';
@@ -53,7 +52,7 @@ function SwiperCarousel() {
         {slides.map((slide, i) => (
           <div
             key={i}
-            className="min-w-full aspect-[21/9]  flex items-center justify-center"
+            className="min-w-full aspect-[21/9] flex items-center justify-center"
           >
             <img
               src={slide.image}
@@ -106,11 +105,10 @@ export default function Home() {
   const navigate = useNavigate();
 
   const categories = [
-    { name: "Limpeza", icon: faBroom, description: "Produtos de limpeza profissional", color: "bg-blue-100" },
-    { name: "Higiene", icon: faPumpSoap, description: "Itens de higiene pessoal", color: "bg-green-100" },
-    { name: "Descartáveis", icon: faUtensils, description: "Descartáveis para alimentação", color: "bg-amber-100" },
-    { name: "Embalagens", icon: faBox, description: "Embalagens diversas", color: "bg-rose-100" },
-    { name: "EPIs", icon: faShieldAlt, description: "Equipamentos de proteção", color: "bg-purple-100" },
+    { id: "limpeza", name: "Limpeza e Higiene", icon: faBroom, description: "Produtos de limpeza profissional", color: "bg-blue-100" },
+    { id: "descartaveis", name: "Descartáveis", icon: faUtensils, description: "Descartáveis para alimentação", color: "bg-amber-100" },
+    { id: "embalagens", name: "Embalagens", icon: faBox, description: "Embalagens diversas", color: "bg-rose-100" },
+    { id: "epis", name: "EPIs", icon: faShieldAlt, description: "Equipamentos de proteção", color: "bg-purple-100" },
   ];
 
   const features = [
@@ -136,9 +134,10 @@ export default function Home() {
     { name: "Scotch", src: scotch },
   ];
 
-  const handleCategoryClick = (categoryName: string) => {
-    navigate(`/products?category=${categoryName.toLowerCase()}`);
+  const handleCategoryClick = (categoryId: string) => {
+    navigate(`/products?category=${categoryId}`);
   };
+
   return (
     <div className="min-h-screen bg-white text-gray-800">
       <SwiperCarousel />
@@ -173,24 +172,30 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-sm p-6 text-center group hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100"
-                onClick={() => handleCategoryClick(category.name)}
-              >
-                <div className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <FontAwesomeIcon icon={category.icon} className="text-gray-700 text-xl" />
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center w-full max-w-7xl">
+              {categories.map((category, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl shadow-sm p-6 text-center group hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 w-full max-w-xs"
+                  onClick={() => handleCategoryClick(category.id)}
+                >
+                  <div
+                    className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <FontAwesomeIcon icon={category.icon} className="text-gray-700 text-xl" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{category.name}</h3>
+                  <p className="text-gray-500 text-sm mb-4">{category.description}</p>
+                  <button
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center justify-center mx-auto group-hover:translate-x-1 transition-transform duration-300"
+                  >
+                    <span>Ver Produtos</span>
+                    <FontAwesomeIcon icon={faArrowRight} className="ml-1 text-xs" />
+                  </button>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{category.name}</h3>
-                <p className="text-gray-500 text-sm mb-4">{category.description}</p>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center justify-center mx-auto group-hover:translate-x-1 transition-transform duration-300">
-                  <span>Ver Produtos</span>
-                  <FontAwesomeIcon icon={faArrowRight} className="ml-1 text-xs" />
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
