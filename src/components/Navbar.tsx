@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X, ChevronDown, Search, Phone, Sparkles } from "lucide-react";
 import wsnLogo from "../assets/WSN_LOGO (1).png";
-// Update the import path or ensure useCart is exported from CartContext
-// Update this import to match the actual export from CartContext
 import { useCart } from "../context/CartContext";
 
 type Coords = { left: number; top: number; width: number };
@@ -29,6 +27,44 @@ export default function Navbar() {
 
   const productsBtnRef = useRef<HTMLButtonElement | null>(null);
   const isActive = (path: string) => location.pathname === path;
+
+  /** ------------------ AUTO-HIDE (header esconde ao descer e volta ao subir) ------------------ */
+  const [isHidden, setIsHidden] = useState(false);
+  const lastYRef = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastYRef.current;
+
+      // aparência scrolled
+      setIsScrolled(y > 10);
+
+      // não esconder se menu ou dropdown abertos
+      if (isMenuOpen || isProductsDropdownOpen) {
+        setIsHidden(false);
+        lastYRef.current = y;
+        return;
+      }
+
+      // perto do topo: sempre visível
+      if (y < 80) {
+        setIsHidden(false);
+      } else {
+        // threshold para evitar flicker
+        const goingDown = delta > 5;
+        const goingUp = delta < -5;
+        if (goingDown) setIsHidden(true);
+        else if (goingUp) setIsHidden(false);
+      }
+
+      lastYRef.current = y;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isMenuOpen, isProductsDropdownOpen]);
+  /** ------------------------------------------------------------------------------------------- */
 
   // posiciona dropdown
   const positionMenu = () => {
@@ -66,12 +102,8 @@ export default function Navbar() {
     }
   };
 
-  // scroll/resize/esc
+  // resize/esc
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-      if (isProductsDropdownOpen) positionMenu();
-    };
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMenuOpen(false);
       if (isProductsDropdownOpen) positionMenu();
@@ -82,11 +114,9 @@ export default function Navbar() {
         setIsMenuOpen(false);
       }
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
     document.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("keydown", onKey);
     };
@@ -134,7 +164,7 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-white"
-      }`}
+      } ${isHidden ? "-translate-y-full" : "translate-y-0"} will-change-transform`}
     >
       {/* Barra principal */}
       <div className="bg-white">
@@ -218,9 +248,9 @@ export default function Navbar() {
               <button
                 onClick={() => setIsMenuOpen((v) => !v)}
                 className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                aria-label="Abrir menu"
+                aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
               >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isMenuOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
               </button>
             </div>
           </div>
@@ -373,119 +403,115 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* MENU MOBILE SIMPLES E FUNCIONAL */}
+      {/* MENU MOBILE REFEITO (permanece funcional; header não se esconde enquanto estiver aberto) */}
       {isMenuOpen && (
-        <div className="lg:hidden">
+        <div className="lg:hidden fixed inset-0 z-50">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50"
             onClick={() => setIsMenuOpen(false)}
           />
-          
+
           {/* Menu */}
-          <div className="fixed top-0 right-0 h-full w-80 bg-white z-50 flex flex-col shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <img src={wsnLogo} alt="WSN Logo" className="h-12 w-auto" />
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="p-2 rounded-lg hover:bg-gray-100"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              <Link
-                to="/"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-4 py-3 rounded-lg font-medium ${
-                  isActive("/") ? "bg-blue-600 text-white" : "bg-gray-50 text-gray-700 hover:bg-blue-50"
-                }`}
-              >
-                🏠 Início
-              </Link>
-
-              <Link
-                to="/aboutus"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-4 py-3 rounded-lg font-medium ${
-                  isActive("/aboutus") ? "bg-blue-600 text-white" : "bg-gray-50 text-gray-700 hover:bg-blue-50"
-                }`}
-              >
-                📖 Nossa História
-              </Link>
-
-              {/* Products Section */}
-              <div className="pt-4">
-                <div className="px-4 py-2 text-sm font-semibold text-gray-500">PRODUTOS</div>
-                <div className="space-y-1">
-                  <Link
-                    to="/products"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block w-full text-left px-4 py-3 rounded-lg text-sm ${
-                      isActive("/products") 
-                        ? "bg-blue-100 text-blue-700 border border-blue-200" 
-                        : "bg-white text-gray-700 border border-gray-200 hover:bg-blue-50"
-                    }`}
-                  >
-                    🌟 Todos os Produtos
-                  </Link>
-                  {productCategories.map((category) => (
-                    <Link
-                      key={category.id}
-                      to={`/products?category=${category.id}`}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block w-full text-left px-4 py-3 rounded-lg text-sm bg-white border border-gray-200 hover:bg-blue-50 text-gray-700"
-                    >
-                      <span className="mr-3">{category.icon}</span>
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
+          <div className="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white shadow-2xl">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
+                <img src={wsnLogo} alt="WSN Logo" className="h-10 w-auto" />
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 rounded-full hover:bg-gray-100"
+                  aria-label="Fechar menu"
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
               </div>
 
-              <Link
-                to="/contact"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-4 py-3 rounded-lg font-medium ${
-                  isActive("/contact") ? "bg-blue-600 text-white" : "bg-gray-50 text-gray-700 hover:bg-blue-50"
-                }`}
-              >
-                📞 Contato
-              </Link>
+              {/* Navigation */}
+              <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+                <Link
+                  to="/"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-2.5 rounded-lg text-sm font-medium ${
+                    isActive("/") ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
+                >
+                  🏠 Início
+                </Link>
 
-              {/* WhatsApp */}
-              <a
-                href="https://wa.me/551140705300"
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-3 w-full p-4 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 mt-4"
-              >
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                <Link
+                  to="/aboutus"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-2.5 rounded-lg text-sm font-medium ${
+                    isActive("/aboutus") ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
+                >
+                  📖 Nossa História
+                </Link>
+
+                <div className="mt-4">
+                  <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    Produtos
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    <Link
+                      to="/products"
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`block px-4 py-2.5 rounded-lg text-sm font-medium ${
+                        isActive("/products") ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                      }`}
+                    >
+                      <Sparkles className="h-4 w-4 inline-block mr-2" />
+                      Todos os Produtos
+                    </Link>
+                    {productCategories.map((category) => (
+                      <Link
+                        key={category.id}
+                        to={`/products?category=${category.id}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                      >
+                        <span className="inline-block mr-2">{category.icon}</span>
+                        {category.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <Link
+                  to="/contact"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-2.5 rounded-lg text-sm font-medium ${
+                    isActive("/contact") ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
+                >
+                  📞 Contato
+                </Link>
+              </nav>
+
+              {/* Footer */}
+              <div className="p-4 border-t border-gray-200 bg-white">
+                <a
+                  href="https://wa.me/551140705300"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-green-700 hover:bg-green-50 mb-2"
+                >
                   <Phone className="h-5 w-5 text-green-600" />
-                </div>
-                <div>
-                  <div className="font-semibold text-green-800">(11) 4070-5300</div>
-                  <div className="text-green-600 text-sm">WhatsApp</div>
-                </div>
-              </a>
-            </div>
-
-            {/* Footer */}
-            <div className="p-4 border-t border-gray-200">
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleCartClick();
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                Carrinho {getTotalItems() > 0 && `(${getTotalItems()})`}
-              </button>
+                  (11) 4070-5300 (WhatsApp)
+                </a>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleCartClick();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  Carrinho {getTotalItems() > 0 && `(${getTotalItems()})`}
+                </button>
+              </div>
             </div>
           </div>
         </div>
