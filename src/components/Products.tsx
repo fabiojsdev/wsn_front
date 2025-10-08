@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context";
 import {
   ShoppingCart,
   Search,
@@ -19,6 +19,11 @@ interface Product {
   imagem?: string;
   categoria: string;
 }
+
+const AVAILABLE_IMAGE_NUMBERS = [
+  ...Array.from({ length: 43 }, (_, i) => String(i + 1).padStart(2, "0")),
+  ...Array.from({ length: 17 }, (_, i) => String(i + 48).padStart(2, "0")),
+];
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -42,11 +47,6 @@ const Products: React.FC = () => {
     { id: "embalagens", name: "Embalagens" }
   ];
 
-  const availableImageNumbers = [
-    ...Array.from({ length: 43 }, (_, i) => String(i + 1).padStart(2, "0")),
-    ...Array.from({ length: 17 }, (_, i) => String(i + 48).padStart(2, "0")),
-  ];
-
   useEffect(() => {
     // Verifica se há um parâmetro de categoria na URL
     const categoryParam = searchParams.get("category");
@@ -63,11 +63,11 @@ const Products: React.FC = () => {
       .then((data: Product[]) => {
         let imgIndex = 0;
         const updatedProducts = data.map((product) => {
-          const imageNumber = availableImageNumbers[imgIndex];
+          const imageNumber = AVAILABLE_IMAGE_NUMBERS[imgIndex];
           const imagem = imageNumber
             ? `/images/${imageNumber}.png`
             : "/images/default.jpg";
-          imgIndex = (imgIndex + 1) % availableImageNumbers.length;
+          imgIndex = (imgIndex + 1) % AVAILABLE_IMAGE_NUMBERS.length;
 
           // Adiciona categoria baseada no nome do produto
           let categoria = "limpeza"; // padrão

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import emailjs from 'emailjs-com';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '@/context';
 // Configure o EmailJS com suas credenciais (substitua com suas próprias)
 const EMAILJS_SERVICE_ID = 'seu_service_id';
 const EMAILJS_TEMPLATE_ID = 'seu_template_id';

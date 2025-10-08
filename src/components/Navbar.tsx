@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import wsnLogo from "../assets/wsnlogo.png";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 
 export default function Navbar() {
