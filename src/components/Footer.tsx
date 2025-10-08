@@ -1,7 +1,8 @@
+// src/components/Footer.tsx
 import { useState } from "react";
 import {
   FaEnvelope, FaPaperPlane,
-  FaCheckCircle, FaMapMarkerAlt, FaClock, FaShieldAlt,
+  FaCheckCircle, FaMapMarkerAlt, FaShieldAlt,
   FaTruck, FaHeadset
 } from "react-icons/fa";
 
@@ -79,10 +80,7 @@ export function Footer() {
               content="Av. Baruel, 506 - Vila Baruel, São Paulo - SP"
             />
             <ContactInfo icon={FaEnvelope} content="contato@wsndistribuidora.com.br" />
-            <ContactInfo
-              icon={FaClock}
-              content="Seg a Sex: 8h às 18h | Sáb: 8h às 12h"
-            />
+            {/* Linha de horários removida */}
           </div>
 
           {/* Quick Links */}
@@ -135,7 +133,7 @@ export function Footer() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
           <ServiceCard icon={FaTruck} title="Entregas Rápidas" description="Para todo Brasil" />
           <ServiceCard icon={FaShieldAlt} title="Compra Segura" description="Seus dados protegidos" />
-          <ServiceCard icon={FaHeadset} title="Atendimento" description="Seg a Sex: 8h às 18h" />
+          <ServiceCard icon={FaHeadset} title="Atendimento" description="Equipe pronta para atender" />
         </div>
       </div>
 

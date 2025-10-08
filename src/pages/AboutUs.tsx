@@ -1,3 +1,4 @@
+// src/pages/AboutUs.tsx
 import { MapPin, Phone, Mail, Check, Leaf, Recycle, Truck, Factory } from 'lucide-react';
 
 export default function AboutUs() {
@@ -37,22 +38,43 @@ export default function AboutUs() {
               sucesso.
             </p>
 
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-10">
               Seja bem-vindo à WSN Distribuidora, onde qualidade, atendimento e
               eficiência caminham lado a lado para entregar as melhores soluções
               para o seu negócio.
             </p>
 
-            <h2 className="text-3xl font-semibold text-blue-700 mb-4">
-              Nossos Valores
-            </h2>
-            <ul className="text-gray-600 list-disc pl-5 space-y-2">
-              <li>Qualidade em todos os processos</li>
-              <li>Compromisso com o cliente</li>
-              <li>Inovação constante</li>
-              <li>Responsabilidade socioambiental</li>
-              <li>Integridade e transparência</li>
-            </ul>
+            {/* ==== Missão, Visão e Valores (substitui a seção antiga) ==== */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-3xl font-semibold text-blue-700 mb-3">Missão</h2>
+                <p className="text-gray-600">
+                  Distribuir e comercializar nossos produtos com eficiência, rapidez e confiabilidade,
+                  de modo a satisfazer as necessidades de nossos clientes.
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-3xl font-semibold text-blue-700 mb-3">Visão</h2>
+                <p className="text-gray-600">
+                  Ser referencial de excelência na venda de produtos e na prestação de serviços
+                  com crescimento acima dos níveis de mercado.
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-3xl font-semibold text-blue-700 mb-4">Valores</h2>
+                <ul className="text-gray-600 list-disc pl-5 space-y-2">
+                  <li>Agilidade</li>
+                  <li>Comprometimento</li>
+                  <li>Ética</li>
+                  <li>Respeito</li>
+                  <li>Transparência</li>
+                  <li>Trabalho em equipe</li>
+                </ul>
+              </div>
+            </div>
+            {/* ==== fim Missão/Visão/Valores ==== */}
           </div>
 
           <div className="lg:w-1/3 bg-blue-100 p-6 rounded-lg">

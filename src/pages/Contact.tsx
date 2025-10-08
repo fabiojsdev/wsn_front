@@ -1,3 +1,4 @@
+// src/pages/Contact.tsx
 import { useState } from "react";
 import {
   FaEnvelope,
@@ -6,7 +7,6 @@ import {
   FaPhoneAlt,
   FaComment,
   FaWhatsapp,
-  FaClock,
   FaMapMarkerAlt,
   FaMapMarkedAlt,
   FaDirections,
@@ -216,7 +216,6 @@ export default function Contact() {
 
           {/* Informações de Contato */}
           <div className="space-y-8">
-            {/* Informações principais */}
             <div className="bg-blue-700 text-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
               <h2 className="text-2xl font-semibold mb-6 flex items-center gap-3">
                 <FaHeadset className="text-blue-300" /> Informações de Contato
@@ -231,6 +230,7 @@ export default function Contact() {
                     <p className="mt-1 text-blue-100">(11) 3789-3789</p>
                   </div>
                 </div>
+
                 <a
                   href="https://wa.me/5511973846070"
                   target="_blank"
@@ -245,6 +245,7 @@ export default function Contact() {
                     <p className="mt-1 text-blue-100">(11) 97384-6070</p>
                   </div>
                 </a>
+
                 <a
                   href="mailto:contato@wsndistribuidora.com.br"
                   className="flex items-start p-3 rounded-lg transition-colors hover:bg-blue-600/20"
@@ -257,15 +258,6 @@ export default function Contact() {
                     <p className="mt-1 text-blue-100">contato@wsndistribuidora.com.br</p>
                   </div>
                 </a>
-                <div className="flex items-start p-3 rounded-lg transition-colors">
-                  <div className="rounded-full w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0 bg-blue-600">
-                    <FaClock className="text-white text-sm" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">Horário de Atendimento</h3>
-                    <p className="mt-1 text-blue-100">Segunda a Sexta: 8h às 18h | Sábado: 8h às 12h</p>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -357,7 +349,7 @@ export default function Contact() {
               },
               {
                 question: "Como solicitar orçamento?",
-                answer: "Através do formulário, telefone ou WhatsApp. Retornamos em até 2 horas úteis."
+                answer: "Através do formulário, telefone ou WhatsApp. Retornamos rapidamente após o contato."
               },
               {
                 question: "Trabalham com quais formas de pagamento?",

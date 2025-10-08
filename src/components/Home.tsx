@@ -1,3 +1,4 @@
+// src/pages/Home.tsx
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -5,13 +6,18 @@ import {
   faBroom, faUtensils, faBox,
   faTruck, faIndustry, faAward, faHeadset, faMapMarkerAlt,
   faCheckCircle, faArrowRight, faShieldAlt, faLock
-} from "@fortawesome/free-solid-svg-icons"; 
-import bombril from '../../public/images/bombril.png';
-import limpol from '../../public/images/limpol.png';
-import protex from '../../public/images/protex.png';
-import ype from '../../public/images/ype.png';
-import tresm from '../../public/images/3m.png';
-import scotch from '../../public/images/scotch.png';
+} from "@fortawesome/free-solid-svg-icons";
+
+// === IMPORTS DAS MARCAS (coloque as imagens em src/assets/brands/) ===
+import brand3m from "../../public/images/brands/3m.jpeg";
+import brandDescarpack from "../../public/images/brands/Descarpack.jpeg";
+import brandMedix from "../../public/images/brands/Medix.jpeg";
+import brandScotchBrite from "../../public/images/brands/Scotch-brite.jpeg";
+import brandCopobras from "../../public/images/brands/copobras.jpeg";
+import brandBombril from "../../public/images/brands/bombril.jpeg";
+import brandAlpfilm from "../../public/images/brands/alpfilm.jpeg";
+import brandLifeClean from "../../public/images/brands/life-clean.jpeg";
+import brandSanro from "../../public/images/brands/sanro.jpeg";
 
 // Componente Carousel customizado
 function SwiperCarousel() {
@@ -77,24 +83,15 @@ function SwiperCarousel() {
       </div>
 
       <style>{`
-        .aspect-[21/9] {
-          aspect-ratio: 21 / 9;
-        }
+        .aspect-[21/9] { aspect-ratio: 21 / 9; }
         @media (max-width: 640px) {
-          .aspect-[21/9] {
-            aspect-ratio: 16 / 9;
-            min-height: 40vh;
-          }
+          .aspect-[21/9] { aspect-ratio: 16 / 9; min-height: 40vh; }
         }
         @media (min-width: 641px) and (max-width: 1024px) {
-          .aspect-[21/9] {
-            min-height: 50vh;
-          }
+          .aspect-[21/9] { min-height: 50vh; }
         }
         @media (min-width: 1025px) {
-          .aspect-[21/9] {
-            min-height: 60vh;
-          }
+          .aspect-[21/9] { min-height: 60vh; }
         }
       `}</style>
     </div>
@@ -120,18 +117,22 @@ export default function Home() {
 
   const stats = [
     { value: "19", label: "Anos de experiência" },
-    { value: "1000+", label: "Produtos" },
-    { value: "5000+", label: "Clientes satisfeitos" },
+    { value: "300+", label: "Produtos" },
+    { value: "500+", label: "Clientes satisfeitos" },
     { value: "100%", label: "Comprometimento" },
   ];
 
+  // === NOVAS MARCAS (com imports) ===
   const brands = [
-    { name: "Protex", src: protex },
-    { name: "Limpol", src: limpol },
-    { name: "BomBril", src: bombril },
-    { name: "Ypê", src: ype },
-    { name: "3M", src: tresm },
-    { name: "Scotch", src: scotch },
+    { name: "3M",            src: brand3m },
+    { name: "Descarpack",    src: brandDescarpack },
+    { name: "Medix",         src: brandMedix },
+    { name: "Scotch-Brite",  src: brandScotchBrite },
+    { name: "Copobras",      src: brandCopobras },
+    { name: "Bombril",       src: brandBombril },
+    { name: "Alpfilm",       src: brandAlpfilm },
+    { name: "Life Clean",    src: brandLifeClean },
+    { name: "Sanro",         src: brandSanro },
   ];
 
   const handleCategoryClick = (categoryId: string) => {

@@ -1,4 +1,4 @@
-
+// src/pages/Products.tsx
 import React, { useEffect, useState } from "react";
 import { useCart } from "@/context";
 import {
@@ -38,20 +38,26 @@ const Products: React.FC = () => {
 
   const { addToCart } = useCart();
 
-  // Categorias para filtro
+  // Categorias para filtro (em sincronia com a Navbar)
   const categories = [
     { id: "todos", name: "Todos os Produtos" },
     { id: "limpeza", name: "Limpeza e Higiene" },
     { id: "descartaveis", name: "Descartáveis" },
     { id: "epis", name: "EPIs" },
-    { id: "embalagens", name: "Embalagens" }
+    { id: "embalagens", name: "Embalagens" },
+    { id: "uniformes", name: "Uniformes" },
+    { id: "papeis", name: "Papéis" },
   ];
 
   useEffect(() => {
-    // Verifica se há um parâmetro de categoria na URL
+    // Lê categoria e busca da URL
     const categoryParam = searchParams.get("category");
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
+    if (categoryParam) setSelectedCategory(categoryParam);
+
+    const searchParam = searchParams.get("search");
+    if (typeof searchParam === "string") {
+      setSearchTerm(searchParam);
+      setCurrentPage(1);
     }
 
     // Carrega os produtos do JSON
@@ -62,6 +68,7 @@ const Products: React.FC = () => {
       })
       .then((data: Product[]) => {
         let imgIndex = 0;
+
         const updatedProducts = data.map((product) => {
           const imageNumber = AVAILABLE_IMAGE_NUMBERS[imgIndex];
           const imagem = imageNumber
@@ -69,26 +76,133 @@ const Products: React.FC = () => {
             : "/images/default.jpg";
           imgIndex = (imgIndex + 1) % AVAILABLE_IMAGE_NUMBERS.length;
 
-          // Adiciona categoria baseada no nome do produto
-          let categoria = "limpeza"; // padrão
+          // ===== Classificação de categoria =====
+          // Ordem: Exceções → EPIs → Uniformes → Papéis → Embalagens → Descartáveis → Limpeza (padrão)
+          let categoria: Product["categoria"] = "limpeza";
           const nomeLower = product.nome.toLowerCase();
 
-          if (nomeLower.includes('luva') || nomeLower.includes('máscara') ||
-            nomeLower.includes('touca') || nomeLower.includes('avental') ||
-            nomeLower.includes('protetor') || nomeLower.includes('epi')) {
+          // -------- EXCEÇÕES ESPECÍFICAS ----------
+          // "papel alumínio" deve ser Embalagens (mesmo contendo "papel")
+          const isPapelAluminio =
+            (nomeLower.includes("papel") || nomeLower.includes("papél")) &&
+            (nomeLower.includes("alumínio") || nomeLower.includes("aluminio"));
+
+          // -------- EPIs ----------
+          if (
+            nomeLower.includes("luva") ||
+            nomeLower.includes("máscara") ||
+            nomeLower.includes("mascara") ||
+            nomeLower.includes("respirador") ||
+            nomeLower.includes("protetor") ||
+            nomeLower.includes("protetor facial") ||
+            nomeLower.includes("face shield") ||
+            nomeLower.includes("touca") ||
+            nomeLower.includes("avental") || // avental sempre EPI
+            (nomeLower.includes("epi") && !nomeLower.includes("jaleco"))
+          ) {
             categoria = "epis";
-          } else if (nomeLower.includes('saco') || nomeLower.includes('papel') ||
-            nomeLower.includes('filme') || nomeLower.includes('embalagem') ||
-            nomeLower.includes('bandeja') || nomeLower.includes('alumínio')) {
+          }
+          // -------- Uniformes ----------
+          else if (
+            nomeLower.includes("uniforme") ||
+            nomeLower.includes("jaleco") ||
+            nomeLower.includes("jalecos") ||
+            nomeLower.includes("calça") ||
+            nomeLower.includes("calca") ||
+            nomeLower.includes("camisa") ||
+            nomeLower.includes("dólmã") ||
+            nomeLower.includes("dolma") ||
+            nomeLower.includes("bata")
+          ) {
+            categoria = "uniformes";
+          }
+          // -------- Papéis ----------
+          else if (
+            !isPapelAluminio && // evita classificar "papel alumínio" em Papéis
+            (
+              nomeLower.includes("papel") ||
+              nomeLower.includes("papéis") ||
+              nomeLower.includes("papeis") ||
+              nomeLower.includes("toalha") ||
+              nomeLower.includes("guardanapo") ||
+              nomeLower.includes("higiênico") ||
+              nomeLower.includes("higienico") ||
+              nomeLower.includes("interfolha") ||
+              (nomeLower.includes("bobina") && // bobina de papel
+                (nomeLower.includes("papel") || nomeLower.includes("toalha")))
+            )
+          ) {
+            categoria = "papeis";
+          }
+          // -------- Embalagens ----------
+          else if (
+            isPapelAluminio ||
+            nomeLower.includes("saco de lixo") ||
+            (nomeLower.includes("saco") && nomeLower.includes("lixo")) ||
+            nomeLower.includes("bandeja") ||
+            nomeLower.includes("embalagem") ||
+            nomeLower.includes("embalagens") ||
+            nomeLower.includes("filme pvc") ||
+            (nomeLower.includes("bobina") && !nomeLower.includes("papel")) // bobina plástica
+          ) {
             categoria = "embalagens";
-          } else if (nomeLower.includes('descartável') || nomeLower.includes('pano') ||
-            nomeLower.includes('toalha') || nomeLower.includes('higiênico') ||
-            nomeLower.includes('palito')) {
+          }
+          // -------- Descartáveis ----------
+          else if (
+            nomeLower.includes("descartável") ||
+            nomeLower.includes("descartavel") ||
+            nomeLower.includes("descartáveis") ||
+            nomeLower.includes("copo") ||
+            nomeLower.includes("copos") ||
+            nomeLower.includes("prato") ||
+            nomeLower.includes("pratos") ||
+            nomeLower.includes("talher") ||
+            nomeLower.includes("talheres") ||
+            nomeLower.includes("mexedor") ||
+            nomeLower.includes("palito") ||
+            nomeLower.includes("manga de confeitar") ||
+            (nomeLower.includes("pano") && !nomeLower.includes("rolo 600")) // panos comuns como descartáveis
+          ) {
             categoria = "descartaveis";
+          }
+          // -------- Limpeza e Higiene (padrão + termos comuns) ----------
+          else if (
+            nomeLower.includes("limpeza") ||
+            nomeLower.includes("detergente") ||
+            nomeLower.includes("desinfetante") ||
+            nomeLower.includes("desincrustante") ||
+            nomeLower.includes("cloro") ||
+            nomeLower.includes("sapólio") ||
+            nomeLower.includes("sapolio") ||
+            nomeLower.includes("lustra móveis") ||
+            nomeLower.includes("lustra moveis") ||
+            nomeLower.includes("multiuso") ||
+            nomeLower.includes("limpador") ||
+            nomeLower.includes("removedor") ||
+            nomeLower.includes("odorizador") ||
+            nomeLower.includes("pedra sanit") ||
+            nomeLower.includes("freeco") ||
+            nomeLower.includes("inseticida") ||
+            nomeLower.includes("esponja") ||
+            nomeLower.includes("fibra") ||
+            nomeLower.includes("fibrac") ||
+            nomeLower.includes("borrifador") ||
+            nomeLower.includes("escova") ||
+            nomeLower.includes("rodo") ||
+            nomeLower.includes("vassoura") ||
+            nomeLower.includes("sabão") ||
+            nomeLower.includes("sabao") ||
+            nomeLower.includes("sabonete")
+          ) {
+            categoria = "limpeza";
+          } else {
+            // fallback: limpeza
+            categoria = "limpeza";
           }
 
           return { ...product, imagem, categoria };
         });
+
         setProducts(updatedProducts);
         setIsLoading(false);
       })
@@ -106,7 +220,10 @@ const Products: React.FC = () => {
     if (category === "todos") {
       setSearchParams({});
     } else {
-      setSearchParams({ category });
+      // preserva busca ativa na URL, se houver
+      const params = new URLSearchParams(searchParams);
+      params.set("category", category);
+      setSearchParams(params);
     }
   };
 
@@ -169,11 +286,10 @@ const Products: React.FC = () => {
             Catálogo de Produtos
           </h1>
           <p className="text-gray-600 text-center mb-6 max-w-2xl mx-auto">
-            Descubra nossa linha completa de produtos de limpeza, higiene e
-            descartáveis
+            Descubra nossa linha completa de produtos de limpeza, higiene e descartáveis
           </p>
 
-          {/* Filtros */}
+        {/* Filtros */}
           <div className="flex flex-col gap-4 mb-6">
             {/* Filtro de Categorias */}
             <div>
@@ -183,10 +299,11 @@ const Products: React.FC = () => {
                   <button
                     key={category.id}
                     onClick={() => handleCategoryChange(category.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${selectedCategory === category.id
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      }`}
+                    className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                      selectedCategory === category.id
+                        ? "bg-blue-600 text-white shadow-md"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
                   >
                     {category.name}
                   </button>
@@ -224,7 +341,10 @@ const Products: React.FC = () => {
           <p className="text-sm text-gray-600 mb-4">
             {filteredAndSortedProducts.length} produto(s) encontrado(s)
             {searchTerm && ` para "${searchTerm}"`}
-            {selectedCategory !== "todos" && ` na categoria "${categories.find(c => c.id === selectedCategory)?.name}"`}
+            {selectedCategory !== "todos" &&
+              ` na categoria "${
+                categories.find((c) => c.id === selectedCategory)?.name
+              }"`}
           </p>
         </div>
 
@@ -268,7 +388,7 @@ const Products: React.FC = () => {
 
                     <div className="flex justify-between items-center mt-4">
                       <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                        {categories.find(c => c.id === product.categoria)?.name}
+                        {categories.find((c) => c.id === product.categoria)?.name}
                       </span>
                       <button
                         onClick={() => addToCart(product)}
@@ -307,10 +427,11 @@ const Products: React.FC = () => {
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-2 rounded border ${currentPage === pageNum
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "border-gray-300 text-gray-600 hover:bg-blue-50"
-                          } transition-colors`}
+                        className={`px-3 py-2 rounded border ${
+                          currentPage === pageNum
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "border-gray-300 text-gray-600 hover:bg-blue-50"
+                        } transition-colors`}
                       >
                         {pageNum}
                       </button>
@@ -359,8 +480,7 @@ const Products: React.FC = () => {
             Precisa de ajuda para escolher os produtos?
           </h2>
           <p className="mb-6 max-w-2xl mx-auto">
-            Nossos especialistas estão prontos para te ajudar a encontrar as
-            melhores soluções para suas necessidades
+            Nossos especialistas estão prontos para te ajudar a encontrar as melhores soluções para suas necessidades
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="bg-white text-blue-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition-colors flex items-center justify-center">
